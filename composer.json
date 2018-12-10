@@ -22,7 +22,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "spryker/tax-product-connector": "~4.1.0",
+    "spryker/tax-product-connector": "~4.1.0"
   },
   "require-dev": {
     "spryker/code-sniffer": "^0.11",
