@@ -1,6 +1,6 @@
 {
   "name": "fond-of-spryker/tax-product-connector",
-  "description": "Spryker Shipping Table Rates",
+  "description": "Extend Spryker 'Tax Product Connector'",
   "license": "MIT",
   "authors": [
     {
