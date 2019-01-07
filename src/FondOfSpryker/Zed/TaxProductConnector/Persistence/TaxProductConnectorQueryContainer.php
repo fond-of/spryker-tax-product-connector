@@ -4,6 +4,7 @@ namespace FondOfSpryker\Zed\TaxProductConnector\Persistence;
 
 use Orm\Zed\Product\Persistence\Map\SpyProductAbstractTableMap;
 use Orm\Zed\Tax\Persistence\Map\SpyTaxRateTableMap;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Spryker\Shared\Tax\TaxConstants;
 use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainer as SprykerTaxProductConnectorQueryContainer;
 
