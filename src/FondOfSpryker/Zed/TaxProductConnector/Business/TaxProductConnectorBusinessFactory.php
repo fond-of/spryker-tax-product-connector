@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\TaxProductConnector\Business;
 
 use FondOfSpryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator;
+use FondOfSpryker\Zed\TaxProductConnector\TaxProductConnectorDependencyProvider;
 use Spryker\Zed\TaxProductConnector\Business\TaxProductConnectorBusinessFactory as SprykerTaxProductConnectorBusinessFactory;
 
 /**
@@ -15,7 +16,19 @@ class TaxProductConnectorBusinessFactory extends SprykerTaxProductConnectorBusin
      */
     public function createProductItemTaxRateCalculator()
     {
-        return new ProductItemTaxRateCalculator($this->getQueryContainer(), $this->getTaxFacade());
+        return new ProductItemTaxRateCalculator(
+            $this->getQueryContainer(),
+            $this->getTaxFacade(),
+            $this->getCountryFacade()
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface
+     */
+    protected function getCountryFacade()
+    {
+        return $this->getProvidedDependency(TaxProductConnectorDependencyProvider::FACADE_COUNTRY);
     }
 
 }
