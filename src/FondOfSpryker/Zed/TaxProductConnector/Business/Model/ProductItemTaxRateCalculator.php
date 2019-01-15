@@ -43,6 +43,7 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
      */
     public function recalculate(QuoteTransfer $quoteTransfer)
     {
+        $taxRates = [];
         $countryIso2Code = $this->getShippingCountryIso2Code($quoteTransfer);
         $allIdProductAbstracts = $this->getAllIdAbstractProducts($quoteTransfer);
 
@@ -50,16 +51,16 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
             $countryIso2Code = $this->taxFacade->getDefaultTaxCountryIso2Code();
         }
 
-        if ($quoteTransfer->getShippingAddress() == null || $quoteTransfer->getShippingAddress()->getFkRegion() == null) {
-            $countryTransfer = $this->countryFacade->getCountryByIso2Code($countryIso2Code);
-            /** @var \Generated\Shared\Transfer\RegionTransfer $region */
-            $region = current($countryTransfer->getRegions());
-            $idRegion = $region->getIdRegion();
-        }else {
-            $idRegion = $quoteTransfer->getShippingAddress()->getFkRegion();
+        if ($quoteTransfer->getShippingAddress() != null && $quoteTransfer->getShippingAddress()->getFkRegion() != null) {
+            $taxRates = $this->findTaxRatesByAllIdProductAbstractsCountryIso2CodeAndIdRegion(
+                $allIdProductAbstracts,
+                $countryIso2Code,
+                $quoteTransfer->getShippingAddress()->getFkRegion()
+            );
+        }else{
+            $taxRates = $this->findTaxRatesByAllIdProductAbstractsAndCountryIso2Code($allIdProductAbstracts, $countryIso2Code);
         }
-        
-        $taxRates = $this->findTaxRatesByAllIdProductAbstractsCountryIso2CodeAndIdRegion($allIdProductAbstracts, $countryIso2Code, $idRegion);
+
         $this->setItemsTax($quoteTransfer, $taxRates);
     }
 
