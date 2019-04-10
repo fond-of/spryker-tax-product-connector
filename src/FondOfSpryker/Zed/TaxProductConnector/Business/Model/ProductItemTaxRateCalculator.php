@@ -2,8 +2,8 @@
 
 namespace FondOfSpryker\Zed\TaxProductConnector\Business\Model;
 
+use FondOfSpryker\Zed\Country\Business\CountryFacadeInterface;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Zed\Country\Business\CountryFacadeInterface;
 use Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface;
 use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface;
 use Spryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator as SprykerProductItemTaxRateCalculator;
@@ -29,7 +29,11 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
      * @param \Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface $taxQueryContainer
      * @param \Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface $taxFacade
      */
-    public function __construct(TaxProductConnectorQueryContainerInterface $taxQueryContainer, TaxProductConnectorToTaxInterface $taxFacade, CountryFacadeInterface $countryFacade)
+    public function __construct(
+        TaxProductConnectorQueryContainerInterface $taxQueryContainer,
+        TaxProductConnectorToTaxInterface $taxFacade,
+        CountryFacadeInterface $countryFacade
+    )
     {
         $this->countryFacade = $countryFacade;
         $this->taxQueryContainer = $taxQueryContainer;
@@ -51,11 +55,12 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
             $countryIso2Code = $this->taxFacade->getDefaultTaxCountryIso2Code();
         }
 
-        if ($quoteTransfer->getShippingAddress() != null && $quoteTransfer->getShippingAddress()->getFkRegion() != null) {
+        if ($quoteTransfer->getShippingAddress() != null && $quoteTransfer->getShippingAddress()->getRegion()) {
+            $regionId = $this->countryFacade->getIdRegionByIso2Code($quoteTransfer->getShippingAddress()->getRegion());
             $taxRates = $this->findTaxRatesByAllIdProductAbstractsCountryIso2CodeAndIdRegion(
                 $allIdProductAbstracts,
                 $countryIso2Code,
-                $quoteTransfer->getShippingAddress()->getFkRegion()
+                $regionId
             );
         }else{
             $taxRates = $this->findTaxRatesByAllIdProductAbstractsAndCountryIso2Code($allIdProductAbstracts, $countryIso2Code);
