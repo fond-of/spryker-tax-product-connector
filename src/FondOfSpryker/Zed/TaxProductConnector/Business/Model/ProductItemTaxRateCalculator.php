@@ -5,6 +5,7 @@ namespace FondOfSpryker\Zed\TaxProductConnector\Business\Model;
 use FondOfSpryker\Zed\Country\Business\CountryFacadeInterface;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface;
+use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainer;
 use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface;
 use Spryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator as SprykerProductItemTaxRateCalculator;
 
@@ -68,6 +69,48 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
 
         $this->setItemsTax($quoteTransfer, $taxRates);
     }
+    
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param array $taxRates
+     *
+     * @return void
+     */
+    protected function setItemsTax(QuoteTransfer $quoteTransfer, array $taxRates)
+    {
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            $itemTransfer->setTaxRate(
+                $this->getTaxRate(
+                    $taxRates,
+                    $itemTransfer->getIdProductAbstract(),
+                    $quoteTransfer
+                )
+            );
+        }
+    }
+
+    /**
+     * @param array $taxRates
+     * @param int $idProductAbstract
+     *
+     * @return float
+     */
+    protected function getTaxRate(array $taxRates, $idProductAbstract, QuoteTransfer $quoteTransfer)
+    {
+
+        if ($quoteTransfer->getShippingAddress() === null) {
+            return $this->taxFacade->getDefaultTaxRate();
+        }
+
+        foreach ($taxRates as $taxRate) {
+            if ((int)$taxRate[TaxProductConnectorQueryContainer::COL_ID_ABSTRACT_PRODUCT] === (int)$idProductAbstract) {
+                return (float)$taxRate[TaxProductConnectorQueryContainer::COL_MAX_TAX_RATE];
+            }
+        }
+
+        return $this->taxFacade->getDefaultTaxRate();
+    }
+
 
     /**
      * @param array $allIdProductAbstracts
