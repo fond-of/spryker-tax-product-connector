@@ -13,4 +13,11 @@ interface TaxProductConnectorStubInterface extends SprykerTaxProductConnectorStu
      * @return \Generated\Shared\Transfer\StorageProductTransfer
      */
     public function getNetPriceForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
+     *
+     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     */
+    public function getTaxAmountForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer;
 }

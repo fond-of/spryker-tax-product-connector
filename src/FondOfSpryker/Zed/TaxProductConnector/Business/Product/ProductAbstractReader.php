@@ -28,7 +28,7 @@ class ProductAbstractReader implements ProductAbstractReaderInterface
      *
      * @return \Generated\Shared\Transfer\StorageProductTransfer
      */
-    public function getNetPriceForProductAbstract(StorageProductTransfer $productTransfer): StorageProductTransfer
+    public function getNetPriceForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer
     {
         $netPrice = $this->priceCalculationHelper->getNetValueFromPrice(
             $productTransfer->getPrice(),
@@ -36,6 +36,23 @@ class ProductAbstractReader implements ProductAbstractReaderInterface
         );
 
         $productTransfer->setNetPrice($netPrice);
+
+        return $productTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
+     *
+     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     */
+    public function getTaxAmountForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer
+    {
+        $taxAmount = $this->priceCalculationHelper->getTaxValueFromPrice(
+            $productTransfer->getPrice(),
+            $productTransfer->getTaxRate()
+        );
+
+        $productTransfer->setTaxAmount($taxAmount);
 
         return $productTransfer;
     }

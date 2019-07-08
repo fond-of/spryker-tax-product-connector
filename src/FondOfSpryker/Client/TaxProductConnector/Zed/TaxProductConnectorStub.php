@@ -16,4 +16,14 @@ class TaxProductConnectorStub extends SprykerTaxProductConnectorStub implements 
     {
         return $this->zedRequestClient->call('/tax-product-connector/gateway/get-net-price-for-product', $productTransfer);
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
+     *
+     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     */
+    public function getTaxAmountForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer
+    {
+        return $this->zedRequestClient->call('/tax-product-connector/gateway/get-tax-amount-for-product', $productTransfer);
+    }
 }

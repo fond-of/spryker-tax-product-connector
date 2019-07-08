@@ -12,5 +12,12 @@ interface ProductAbstractReaderInterface
      *
      * @return \Generated\Shared\Transfer\StorageProductTransfer
      */
-    public function getNetPriceForProductAbstract(StorageProductTransfer $storageProductTransfer): StorageProductTransfer;
+    public function getNetPriceForProduct(StorageProductTransfer $storageProductTransfer): StorageProductTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $storageProductTransfer
+     *
+     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     */
+    public function getTaxAmountForProduct(StorageProductTransfer $storageProductTransfer): StorageProductTransfer;
 }

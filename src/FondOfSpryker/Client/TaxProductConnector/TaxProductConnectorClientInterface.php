@@ -12,4 +12,11 @@ interface TaxProductConnectorClientInterface
      * @return \Generated\Shared\Transfer\StorageProductTransfer
      */
     public function getNetPriceForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productAbstractTransfer
+     *
+     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     */
+    public function getTaxAmountForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer;
 }

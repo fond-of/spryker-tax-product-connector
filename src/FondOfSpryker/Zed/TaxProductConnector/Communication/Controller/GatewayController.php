@@ -17,6 +17,16 @@ class GatewayController extends SprykerGatewayController
      */
     public function getNetPriceForProductAction(StorageProductTransfer $productTransfer): StorageProductTransfer
     {
-        return $this->getFacade()->getNetPriceForProductAbstract($productTransfer);
+        return $this->getFacade()->getNetPriceForProduct($productTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
+     *
+     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     */
+    public function getTaxAmountForProductAction(StorageProductTransfer $productTransfer): StorageProductTransfer
+    {
+        return $this->getFacade()->getTaxAmountForProduct($productTransfer);
     }
 }

@@ -15,9 +15,20 @@ class TaxProductConnectorFacade extends SprykerTaxProductConnectorFacade impleme
      *
      * @return \Generated\Shared\Transfer\StorageProductTransfer
      */
-    public function getNetPriceForProductAbstract(StorageProductTransfer $productTransfer): StorageProductTransfer
+    public function getNetPriceForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer
     {
-        return $this->getFactory()->createProductAbstractReader()->getNetPriceForProductAbstract($productTransfer);
+        return $this->getFactory()->createProductAbstractReader()->getNetPriceForProduct($productTransfer);
+
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
+     *
+     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     */
+    public function getTaxAmountForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer
+    {
+        return $this->getFactory()->createProductAbstractReader()->getTaxAmountForProduct($productTransfer);
 
     }
 }
