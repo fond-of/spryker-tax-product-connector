@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Zed\TaxProductConnector\Business\Product;
 
-use Generated\Shared\Transfer\StorageProductTransfer;
+use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Zed\Tax\Business\Model\PriceCalculationHelper;
 
 class ProductAbstractReader implements ProductAbstractReaderInterface
@@ -24,11 +24,11 @@ class ProductAbstractReader implements ProductAbstractReaderInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
      *
-     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
-    public function getNetPriceForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer
+    public function getNetPriceForProduct(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer
     {
         $netPrice = $this->priceCalculationHelper->getNetValueFromPrice(
             $productTransfer->getPrice(),
@@ -41,11 +41,11 @@ class ProductAbstractReader implements ProductAbstractReaderInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
-     *
-     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
+     * 
+     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
-    public function getTaxAmountForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer
+    public function getTaxAmountForProduct(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer
     {
         $taxAmount = $this->priceCalculationHelper->getTaxValueFromPrice(
             $productTransfer->getPrice(),

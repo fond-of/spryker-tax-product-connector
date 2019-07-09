@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Zed\TaxProductConnector\Communication\Controller;
 
-use Generated\Shared\Transfer\StorageProductTransfer;
+use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Spryker\Zed\TaxProductConnector\Communication\Controller\GatewayController as SprykerGatewayController;
 
 /**
@@ -11,21 +11,21 @@ use Spryker\Zed\TaxProductConnector\Communication\Controller\GatewayController a
 class GatewayController extends SprykerGatewayController
 {
     /**
-     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
      *
-     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
-    public function getNetPriceForProductAction(StorageProductTransfer $productTransfer): StorageProductTransfer
+    public function getNetPriceForProductAction(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer
     {
         return $this->getFacade()->getNetPriceForProduct($productTransfer);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\StorageProductTransfer $productTransfer
-     *
-     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
+     * 
+     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
-    public function getTaxAmountForProductAction(StorageProductTransfer $productTransfer): StorageProductTransfer
+    public function getTaxAmountForProductAction(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer
     {
         return $this->getFacade()->getTaxAmountForProduct($productTransfer);
     }

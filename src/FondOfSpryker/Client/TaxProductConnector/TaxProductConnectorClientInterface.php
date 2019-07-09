@@ -2,21 +2,22 @@
 
 namespace FondOfSpryker\Client\TaxProductConnector;
 
+use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Generated\Shared\Transfer\StorageProductTransfer;
 
 interface TaxProductConnectorClientInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productAbstractTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
      *
-     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
-    public function getNetPriceForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer;
+    public function getNetPriceForProduct(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productAbstractTransfer
-     *
-     * @return \Generated\Shared\Transfer\StorageProductTransfer
+     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
+     * 
+     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
-    public function getTaxAmountForProduct(StorageProductTransfer $productTransfer): StorageProductTransfer;
+    public function getTaxAmountForProduct(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer;
 }
