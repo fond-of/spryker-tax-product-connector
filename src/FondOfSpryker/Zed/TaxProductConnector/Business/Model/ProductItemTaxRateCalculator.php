@@ -4,10 +4,10 @@ namespace FondOfSpryker\Zed\TaxProductConnector\Business\Model;
 
 use FondOfSpryker\Zed\Country\Business\CountryFacadeInterface;
 use Generated\Shared\Transfer\QuoteTransfer;
+use Spryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator as SprykerProductItemTaxRateCalculator;
 use Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface;
 use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainer;
 use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface;
-use Spryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator as SprykerProductItemTaxRateCalculator;
 
 class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
 {
@@ -29,13 +29,13 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
     /**
      * @param \Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface $taxQueryContainer
      * @param \Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface $taxFacade
+     * @param \FondOfSpryker\Zed\Country\Business\CountryFacadeInterface $countryFacade
      */
     public function __construct(
         TaxProductConnectorQueryContainerInterface $taxQueryContainer,
         TaxProductConnectorToTaxInterface $taxFacade,
         CountryFacadeInterface $countryFacade
-    )
-    {
+    ) {
         $this->countryFacade = $countryFacade;
         $this->taxQueryContainer = $taxQueryContainer;
         $this->taxFacade = $taxFacade;
@@ -63,7 +63,7 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
                 $countryIso2Code,
                 $regionId
             );
-        }else{
+        } else {
             $taxRates = $this->findTaxRatesByAllIdProductAbstractsAndCountryIso2Code($allIdProductAbstracts, $countryIso2Code);
         }
 
@@ -97,7 +97,6 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
      */
     protected function getTaxRate(array $taxRates, $idProductAbstract, QuoteTransfer $quoteTransfer)
     {
-
         if ($quoteTransfer->getShippingAddress() === null) {
             return $this->taxFacade->getDefaultTaxRate();
         }
@@ -110,7 +109,6 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
 
         return $this->taxFacade->getDefaultTaxRate();
     }
-
 
     /**
      * @param array $allIdProductAbstracts
