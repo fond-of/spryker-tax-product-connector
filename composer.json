@@ -21,8 +21,8 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
-    "spryker/tax-product-connector": "^4.2.0",
+    "php": ">=7.2",
+    "spryker/tax-product-connector": "^4.2.1",
     "fond-of-spryker/country": "dev-spryker_upgrade"
   },
   "require-dev": {
