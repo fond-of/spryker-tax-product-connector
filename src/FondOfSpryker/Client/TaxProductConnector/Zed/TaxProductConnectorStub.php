@@ -3,7 +3,6 @@
 namespace FondOfSpryker\Client\TaxProductConnector\Zed;
 
 use Generated\Shared\Transfer\ProductAbstractTransfer;
-use Generated\Shared\Transfer\StorageProductTransfer;
 use Spryker\Client\TaxProductConnector\Zed\TaxProductConnectorStub as SprykerTaxProductConnectorStub;
 
 class TaxProductConnectorStub extends SprykerTaxProductConnectorStub implements TaxProductConnectorStubInterface

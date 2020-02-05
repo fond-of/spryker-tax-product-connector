@@ -22,7 +22,7 @@ class GatewayController extends SprykerGatewayController
 
     /**
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
-     * 
+     *
      * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
     public function getTaxAmountForProductAction(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer
