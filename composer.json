@@ -23,7 +23,7 @@
   "require": {
     "php": ">=7.1",
     "spryker/tax-product-connector": "~4.1.0",
-    "fond-of-spryker/country": "dev-master"
+    "fond-of-spryker/country": "dev-feature/paypal-refund"
   },
   "require-dev": {
     "spryker/code-sniffer": "^0.11",
