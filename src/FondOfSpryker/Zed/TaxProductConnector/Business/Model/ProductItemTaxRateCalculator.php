@@ -3,11 +3,11 @@
 namespace FondOfSpryker\Zed\TaxProductConnector\Business\Model;
 
 use FondOfSpryker\Zed\Country\Business\CountryFacadeInterface;
+use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator as SprykerProductItemTaxRateCalculator;
+use Spryker\Zed\TaxProductConnector\Business\Calculator\ProductItemTaxRateCalculator as SprykerProductItemTaxRateCalculator;
 use Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface;
-use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainer;
-use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface;
+use FondOfSpryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface;
 
 class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
 {
@@ -17,7 +17,7 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
     protected $countryFacade;
 
     /**
-     * @var \Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface
+     * @var \FondOfSpryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface
      */
     protected $taxQueryContainer;
 
@@ -27,7 +27,12 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
     protected $taxFacade;
 
     /**
-     * @param \Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface $taxQueryContainer
+     * @var int
+     */
+    protected $defaultRegionId;
+
+    /**
+     * @param \FondOfSpryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface $taxQueryContainer
      * @param \Spryker\Zed\TaxProductConnector\Dependency\Facade\TaxProductConnectorToTaxInterface $taxFacade
      * @param \FondOfSpryker\Zed\Country\Business\CountryFacadeInterface $countryFacade
      */
@@ -36,6 +41,7 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
         TaxProductConnectorToTaxInterface $taxFacade,
         CountryFacadeInterface $countryFacade
     ) {
+        parent::__construct($taxQueryContainer, $taxFacade);
         $this->countryFacade = $countryFacade;
         $this->taxQueryContainer = $taxQueryContainer;
         $this->taxFacade = $taxFacade;
@@ -48,78 +54,79 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
      */
     public function recalculate(QuoteTransfer $quoteTransfer)
     {
-        $taxRates = [];
-        $countryIso2Code = $this->getShippingCountryIso2Code($quoteTransfer);
-        $allIdProductAbstracts = $this->getAllIdAbstractProducts($quoteTransfer);
+        $foundResults = $this->taxQueryContainer
+            ->queryTaxSetByIdProductAbstractAndCountryIso2CodesAndIdRegions(
+                $this->getIdProductAbstruct($quoteTransfer->getItems()),
+                $this->getCountryIso2Codes($quoteTransfer->getItems()),
+                $this->getRegionIds($quoteTransfer->getItems())
+            )
+            ->find();
 
-        if (!$countryIso2Code) {
-            $countryIso2Code = $this->taxFacade->getDefaultTaxCountryIso2Code();
-        }
+        $taxRatesByIdProductAbstractAndCountry = $this->mapByIdProductAbstractAndCountry($foundResults);
 
-        if ($quoteTransfer->getShippingAddress() != null && $quoteTransfer->getShippingAddress()->getRegion()) {
-            $regionId = $this->countryFacade->getIdRegionByIso2Code($quoteTransfer->getShippingAddress()->getRegion());
-            $taxRates = $this->findTaxRatesByAllIdProductAbstractsCountryIso2CodeAndIdRegion(
-                $allIdProductAbstracts,
-                $countryIso2Code,
-                $regionId
-            );
-        } else {
-            $taxRates = $this->findTaxRatesByAllIdProductAbstractsAndCountryIso2Code($allIdProductAbstracts, $countryIso2Code);
-        }
-
-        $this->setItemsTax($quoteTransfer, $taxRates);
-    }
-    
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param array $taxRates
-     *
-     * @return void
-     */
-    protected function setItemsTax(QuoteTransfer $quoteTransfer, array $taxRates)
-    {
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $itemTransfer->setTaxRate(
-                $this->getTaxRate(
-                    $taxRates,
-                    $itemTransfer->getIdProductAbstract(),
-                    $quoteTransfer
-                )
+            $taxRate = $this->getEffectiveTaxRate(
+                $taxRatesByIdProductAbstractAndCountry,
+                $itemTransfer->getIdProductAbstract(),
+                $this->getShippingCountryIso2CodeByItem($itemTransfer)
             );
+            $itemTransfer->setTaxRate($taxRate);
         }
     }
 
     /**
-     * @param array $taxRates
-     * @param int $idProductAbstract
+     * @param \ArrayObject|\Generated\Shared\Transfer\ItemTransfer[] $itemTransfers
      *
-     * @return float
+     * @return string[]
      */
-    protected function getTaxRate(array $taxRates, $idProductAbstract, QuoteTransfer $quoteTransfer)
+    protected function getRegionIds(iterable $itemTransfers): array
     {
-        if ($quoteTransfer->getShippingAddress() === null) {
-            return $this->taxFacade->getDefaultTaxRate();
+        $result = [];
+        foreach ($itemTransfers as $itemTransfer) {
+            $result[] = $this->getRegionIdByItem($itemTransfer);
         }
 
-        foreach ($taxRates as $taxRate) {
-            if ((int)$taxRate[TaxProductConnectorQueryContainer::COL_ID_ABSTRACT_PRODUCT] === (int)$idProductAbstract) {
-                return (float)$taxRate[TaxProductConnectorQueryContainer::COL_MAX_TAX_RATE];
-            }
-        }
-
-        return $this->taxFacade->getDefaultTaxRate();
+        return array_unique($result);
     }
 
     /**
-     * @param array $allIdProductAbstracts
-     * @param string $countryIso2Code
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
-     * @return array
+     * @return string
      */
-    protected function findTaxRatesByAllIdProductAbstractsCountryIso2CodeAndIdRegion(array $allIdProductAbstracts, $countryIso2Code, $idRegion)
+    protected function getRegionIdByItem(ItemTransfer $itemTransfer): string
     {
-        return $this->taxQueryContainer->queryTaxSetByIdProductAbstractCountryIso2CodeAndIdRegion($allIdProductAbstracts, $countryIso2Code, $idRegion)
-            ->find()
-            ->toArray();
+        if ($this->hasItemShippingAddressDefaultRegionId($itemTransfer)) {
+            return $itemTransfer->getShipment()->getShippingAddress()->getFkRegion();
+        }
+
+        return $this->getDefaultTaxRegionId();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     *
+     * @return bool
+     */
+    protected function hasItemShippingAddressDefaultRegionId(ItemTransfer $itemTransfer): bool
+    {
+        $shipmentTransfer = $itemTransfer->getShipment();
+
+        return $shipmentTransfer !== null &&
+            $shipmentTransfer->getShippingAddress() !== null &&
+            $shipmentTransfer->getShippingAddress()->getFkRegion() !== null;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDefaultTaxRegionId(): int
+    {
+        if ($this->defaultRegionId === null) {
+            //ToDo get default Region!!!!
+            $this->defaultRegionId = 1;
+        }
+
+        return $this->defaultRegionId;
     }
 }

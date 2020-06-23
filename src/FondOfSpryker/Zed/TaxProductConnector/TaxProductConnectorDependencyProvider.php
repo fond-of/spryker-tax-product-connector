@@ -8,9 +8,9 @@ use Spryker\Zed\TaxProductConnector\TaxProductConnectorDependencyProvider as Spr
 
 class TaxProductConnectorDependencyProvider extends SprykerTaxProductConnectorDependencyProvider
 {
-    const FACADE_COUNTRY = 'facade_country';
+    public const FACADE_COUNTRY = 'facade_country';
 
-    const PRICE_CALCULATION_HELPER = 'PRICE_CALCULATION_HELPER';
+    public const PRICE_CALCULATION_HELPER = 'PRICE_CALCULATION_HELPER';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container

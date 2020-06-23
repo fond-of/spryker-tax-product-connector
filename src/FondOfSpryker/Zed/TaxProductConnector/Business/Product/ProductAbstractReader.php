@@ -13,13 +13,11 @@ class ProductAbstractReader implements ProductAbstractReaderInterface
     protected $priceCalculationHelper;
 
     /**
-     * ProductAbstractReader constructor.
      * @param \Spryker\Zed\Tax\Business\Model\PriceCalculationHelper $priceCalculationHelper
      */
     public function __construct(
         PriceCalculationHelper $priceCalculationHelper
-    )
-    {
+    ) {
         $this->priceCalculationHelper = $priceCalculationHelper;
     }
 
@@ -42,7 +40,7 @@ class ProductAbstractReader implements ProductAbstractReaderInterface
 
     /**
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
-     * 
+     *
      * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
     public function getTaxAmountForProduct(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer
