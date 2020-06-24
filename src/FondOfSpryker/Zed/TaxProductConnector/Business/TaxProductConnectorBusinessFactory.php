@@ -23,8 +23,6 @@ class TaxProductConnectorBusinessFactory extends SprykerTaxProductConnectorBusin
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient
      */
     public function createPriceCalculationHelper()
@@ -33,8 +31,6 @@ class TaxProductConnectorBusinessFactory extends SprykerTaxProductConnectorBusin
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Zed\Country\Business\CountryFacadeInterface
      */
     public function getCountryFacade(): CountryFacadeInterface

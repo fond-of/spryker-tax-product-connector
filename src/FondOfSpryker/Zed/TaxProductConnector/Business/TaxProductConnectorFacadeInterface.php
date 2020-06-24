@@ -16,10 +16,8 @@ interface TaxProductConnectorFacadeInterface extends SprykerTaxProductConnectorF
 
     /**
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
-     * 
+     *
      * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
     public function getTaxAmountForProduct(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer;
-
-
 }

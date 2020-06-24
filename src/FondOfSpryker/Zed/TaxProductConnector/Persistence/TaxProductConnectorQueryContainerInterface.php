@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\TaxProductConnector\Persistence;
 
+use Orm\Zed\Tax\Persistence\SpyTaxSetQuery;
 use Spryker\Zed\TaxProductConnector\Persistence\TaxProductConnectorQueryContainerInterface as SprykerTaxProductConnectorQueryContainerInterface;
 
 interface TaxProductConnectorQueryContainerInterface extends SprykerTaxProductConnectorQueryContainerInterface
@@ -14,4 +15,17 @@ interface TaxProductConnectorQueryContainerInterface extends SprykerTaxProductCo
      * @return \Orm\Zed\Tax\Persistence\SpyTaxSetQuery
      */
     public function queryTaxSetByIdProductAbstractCountryIso2CodeAndIdRegion(array $allIdProductAbstracts, $countryIso2Code, $idRegion);
+
+    /**
+     * @api
+     *
+     * @module Country
+     *
+     * @param int[] $idProductAbstracts
+     * @param string[] $countryIso2Code
+     * @param int[] $idRegions
+     *
+     * @return \Orm\Zed\Tax\Persistence\SpyTaxSetQuery
+     */
+    public function queryTaxSetByIdProductAbstractAndCountryIso2CodesAndIdRegions(array $idProductAbstracts, array $countryIso2Code, array $idRegions): SpyTaxSetQuery;
 }

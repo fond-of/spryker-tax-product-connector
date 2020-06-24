@@ -15,7 +15,7 @@ interface ProductAbstractReaderInterface
 
     /**
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $storageProductTransfer
-     * 
+     *
      * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
     public function getTaxAmountForProduct(ProductAbstractTransfer $storageProductTransfer): ProductAbstractTransfer;

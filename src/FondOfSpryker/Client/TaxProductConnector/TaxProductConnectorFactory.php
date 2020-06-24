@@ -3,7 +3,6 @@
 namespace FondOfSpryker\Client\TaxProductConnector;
 
 use FondOfSpryker\Client\TaxProductConnector\Zed\TaxProductConnectorStub;
-use Spryker\Client\Kernel\AbstractFactory;
 use Spryker\Client\TaxProductConnector\TaxProductConnectorFactory as SprykerTaxProductConnectorFactory;
 use Spryker\Client\TaxProductConnector\Zed\TaxProductConnectorStubInterface;
 
@@ -16,5 +15,4 @@ class TaxProductConnectorFactory extends SprykerTaxProductConnectorFactory
     {
         return new TaxProductConnectorStub($this->getZedRequestClient());
     }
-
 }

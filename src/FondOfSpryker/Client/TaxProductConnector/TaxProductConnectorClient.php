@@ -22,7 +22,7 @@ class TaxProductConnectorClient extends AbstractClient implements TaxProductConn
 
     /**
      * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productTransfer
-     * 
+     *
      * @return \Generated\Shared\Transfer\ProductAbstractTransfer
      */
     public function getTaxAmountForProduct(ProductAbstractTransfer $productTransfer): ProductAbstractTransfer
@@ -30,6 +30,3 @@ class TaxProductConnectorClient extends AbstractClient implements TaxProductConn
         return $this->getFactory()->createZedStub()->getTaxAmountForProduct($productTransfer);
     }
 }
-
-
-
