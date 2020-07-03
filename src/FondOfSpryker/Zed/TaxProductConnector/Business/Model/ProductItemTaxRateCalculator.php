@@ -54,13 +54,27 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
      */
     public function recalculate(QuoteTransfer $quoteTransfer)
     {
-        $foundResults = $this->taxQueryContainer
-            ->queryTaxSetByIdProductAbstractAndCountryIso2CodesAndIdRegions(
-                $this->getIdProductAbstruct($quoteTransfer->getItems()),
-                $this->getCountryIso2Codes($quoteTransfer->getItems()),
-                $this->getRegionIds($quoteTransfer->getItems())
-            )
-            ->find();
+        $regionIds = $this->getRegionIds($quoteTransfer->getItems());
+        $foundResults = null;
+
+        if (count($regionIds) > 0){
+            $foundResults = $this->taxQueryContainer
+                ->queryTaxSetByIdProductAbstractAndCountryIso2CodesAndIdRegions(
+                    $this->getIdProductAbstruct($quoteTransfer->getItems()),
+                    $this->getCountryIso2Codes($quoteTransfer->getItems()),
+                    $regionIds
+                )
+                ->find();
+        }
+
+        if ($foundResults === null || count($foundResults->getData()) === 0){
+            $foundResults = $this->taxQueryContainer
+                ->queryTaxSetByIdProductAbstractAndCountryIso2CodesWhenRegionIsNull(
+                    $this->getIdProductAbstruct($quoteTransfer->getItems()),
+                    $this->getCountryIso2Codes($quoteTransfer->getItems())
+                )
+                ->find();
+        }
 
         $taxRatesByIdProductAbstractAndCountry = $this->mapByIdProductAbstractAndCountry($foundResults);
 
@@ -83,7 +97,10 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
     {
         $result = [];
         foreach ($itemTransfers as $itemTransfer) {
-            $result[] = $this->getRegionIdByItem($itemTransfer);
+            $idRegion = $this->getRegionIdByItem($itemTransfer);
+            if ($idRegion !== null){
+                $result[] = $idRegion;
+            }
         }
 
         return array_unique($result);
@@ -92,15 +109,15 @@ class ProductItemTaxRateCalculator extends SprykerProductItemTaxRateCalculator
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
-     * @return string
+     * @return string|null
      */
-    protected function getRegionIdByItem(ItemTransfer $itemTransfer): string
+    protected function getRegionIdByItem(ItemTransfer $itemTransfer): ?string
     {
         if ($this->hasItemShippingAddressDefaultRegionId($itemTransfer)) {
             return $itemTransfer->getShipment()->getShippingAddress()->getFkRegion();
         }
 
-        return $this->getDefaultTaxRegionId();
+        return null;
     }
 
     /**
