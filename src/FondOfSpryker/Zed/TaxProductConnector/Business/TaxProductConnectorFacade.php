@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\TaxProductConnector\Business;
 
+use Generated\Shared\Transfer\CalculableObjectTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Zed\TaxProductConnector\Business\TaxProductConnectorFacade as SprykerTaxProductConnectorFacade;
@@ -32,19 +33,19 @@ class TaxProductConnectorFacade extends SprykerTaxProductConnectorFacade impleme
     }
 
     /**
-     * Specification:
-     *  - Set tax rate for each item
+     * {@inheritDoc}
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\CalculableObjectTransfer $calculableObjectTransfer
      *
-     * @return void
+     * @return \Generated\Shared\Transfer\CalculableObjectTransfer
      */
-    public function calculateProductItemTaxRate(QuoteTransfer $quoteTransfer)
+    public function calculateProductItemTaxRateForCalculableObjectTransfer(CalculableObjectTransfer $calculableObjectTransfer): CalculableObjectTransfer
     {
-        $this->getFactory()
-            ->createProductItemTaxRateCalculator()
-            ->recalculate($quoteTransfer);
+        return $this->getFactory()
+            ->createProductItemTaxRateByRegionCalculator()
+            ->recalculateWithCalculableObject($calculableObjectTransfer);
     }
+
 }

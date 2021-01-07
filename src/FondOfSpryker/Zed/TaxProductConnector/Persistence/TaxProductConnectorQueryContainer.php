@@ -22,7 +22,7 @@ class TaxProductConnectorQueryContainer extends SprykerTaxProductConnectorQueryC
      *
      * @return \Orm\Zed\Tax\Persistence\SpyTaxSetQuery
      */
-    public function queryTaxSetByIdProductAbstractCountryIso2CodeAndIdRegion(array $allIdProductAbstracts, $countryIso2Code, $idRegion)
+    public function queryTaxSetByIdProductAbstractCountryIso2CodeAndIdRegion(array $allIdProductAbstracts, string $countryIso2Code, int $idRegion): SpyTaxSetQuery
     {
         return $this->getFactory()->createTaxSetQuery()
             ->useSpyProductAbstractQuery()

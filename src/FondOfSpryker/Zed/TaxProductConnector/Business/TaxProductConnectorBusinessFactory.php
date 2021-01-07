@@ -3,10 +3,13 @@
 namespace FondOfSpryker\Zed\TaxProductConnector\Business;
 
 use FondOfSpryker\Zed\Country\Business\CountryFacadeInterface;
+use FondOfSpryker\Zed\TaxProductConnector\Business\Calculator\ProductItemTaxRateByRegionCalculator;
 use FondOfSpryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator;
 use FondOfSpryker\Zed\TaxProductConnector\Business\Product\ProductAbstractReader;
 use FondOfSpryker\Zed\TaxProductConnector\Business\Product\ProductAbstractReaderInterface;
 use FondOfSpryker\Zed\TaxProductConnector\TaxProductConnectorDependencyProvider;
+use Spryker\Zed\TaxProductConnector\Business\Calculator\CalculatorInterface;
+use Spryker\Zed\TaxProductConnector\Business\Calculator\ProductItemTaxRateCalculator as ProductItemTaxRateCalculatorWithMultipleShipmentTaxRate;
 use Spryker\Zed\TaxProductConnector\Business\TaxProductConnectorBusinessFactory as SprykerTaxProductConnectorBusinessFactory;
 
 /**
@@ -23,7 +26,7 @@ class TaxProductConnectorBusinessFactory extends SprykerTaxProductConnectorBusin
     }
 
     /**
-     * @return \FondOfSpryker\Client\TaxProductConnector\TaxProductConnectorClient
+     * @return \Spryker\Zed\Tax\Business\Model\PriceCalculationHelper
      */
     public function createPriceCalculationHelper()
     {
@@ -39,14 +42,13 @@ class TaxProductConnectorBusinessFactory extends SprykerTaxProductConnectorBusin
     }
 
     /**
-     * @return \Spryker\Zed\TaxProductConnector\Business\Model\ProductItemTaxRateCalculator
+     * @return \Spryker\Zed\TaxProductConnector\Business\Calculator\CalculatorInterface
      */
-    public function createProductItemTaxRateCalculator()
+    public function createProductItemTaxRateByRegionCalculator(): CalculatorInterface
     {
-        return new ProductItemTaxRateCalculator(
+        return new ProductItemTaxRateByRegionCalculator(
             $this->getQueryContainer(),
-            $this->getTaxFacade(),
-            $this->getCountryFacade()
+            $this->getTaxFacade()
         );
     }
 }
